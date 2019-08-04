@@ -12,7 +12,7 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 项目
 data_dir = os.path.join(base_dir, "data")  # data文件夹路径
 
 conf_dir = os.path.join(base_dir, "conf")
-conf_file = os.path.join(conf_dir, "conf.ini")  # 测试环境配置文件路径
+conf_file = os.path.join(conf_dir, "conf.ini")  # 环境配置文件路径
 
 # 日志路径
 output_dir = os.path.join(base_dir, "output")

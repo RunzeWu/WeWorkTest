@@ -8,28 +8,25 @@ import pytest
 from selenium import webdriver
 
 
-@pytest.fixture('class')
-def init_driver():
-    driver = webdriver.Chrome()
-    driver.get("https://work.weixin.qq.com/wework_admin/frame#contacts")
-    cookies = {
-                "wwrtx.vst": "vYBqdcvXYVduy7fJ6JfHYDPdgLlonrvyDwLwvcrn5JDhlR"
-                             "53RH2DqQ2SsTuxyVv7GH1Ltiq09EDy_2MQ9dyR8j1AHKjdgKgoUlP"
-                             "0_z7xBeupOCNCOc-2t_CfHeAFSrz9m9Rz8eS73HNBHiyO9kobqc"
-                             "jk5D6t0xdxfx-BMlkCheEdDXd8qLT3neohv0n6oghLKoO_2V9UD18fOrgmuqZvbMIV"
-                             "KAc7nxN5H6OE26wTx8ozWmo_l-I7N8tFXdiEcSi0QwOXUiuq3FduOqDOU4nI_w",
-                "wwrtx.d2st": "a351283",
-                "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0oUHVzVXFUSTLVvKWG_yn3OeIPevhS5M7xv0Cqv9pSQku",
-                "wwrtx.ltype": "1",
-                "wxpay.corpid": "1688852500754167",
-                "wxpay.vid": "1688852500754167",
-            }
-
-    for k, v in cookies.items():
-        driver.add_cookie({"name":k, "value":v})
-    driver.get("https://work.weixin.qq.com/wework_admin/frame#contacts")
-    driver.refresh()
-    yield driver
-    driver.close()
-
-init_driver()
+# @pytest.fixture('class')
+# def init_driver():
+#     driver = webdriver.Chrome()
+#     driver.get("https://work.weixin.qq.com/wework_admin/frame#contacts")
+#     cookies = {
+#                 "wwrtx.vst": "nkpa9GMRJb6IXY6QocvU2OCjBFr7PI5sz3zuvHK0pZ8s7wbAiDq-N1cnID5Yk0_Mf"
+#                              "NV0tDDf1WKce2HpKYXvNrRCq-QjITOhvc51vTnUEqtKOXiMHg72N2iVw3daxMQuaauueGic_L"
+#                              "W-pSDyJok7UBVoV-AVXSxEqpsdQY4PCpVP420niA3-ch8a-kuWrTcHK4EHelLXzqBOVbifiS2Lc8"
+#                              "QxRGEp0KGK5G1DkplM7-OnQgXKnLAYUWEDHB18C9yQKorJ5Hr1iT8FTQ_-Dr4hmg",
+#                 "wwrtx.d2st": "a529674",
+#                 "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0ob3iKrITG1_B-kEmKk-t_jXqIXEDcOM0WOGfH03WdFKb",
+#                 "wwrtx.ltype": "1",
+#                 "wxpay.corpid": "1688852500754167",
+#                 "wxpay.vid": "1688852500754167",
+#             }
+#
+#     for k, v in cookies.items():
+#         driver.add_cookie({"name":k, "value":v})
+#     driver.get("https://work.weixin.qq.com/wework_admin/frame")
+#     driver.refresh()
+#     yield driver
+    # driver.close()

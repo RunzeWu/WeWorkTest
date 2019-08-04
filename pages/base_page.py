@@ -17,10 +17,26 @@ logger = mylog.get_logger("basepage")
 
 class BasePage:
 
-    def __init__(self, driver: Chrome):
-        self.driver = driver
+    def __init__(self):
+        self.driver = Chrome()
+        self.driver.get("https://work.weixin.qq.com/wework_admin/frame#contacts")
+        cookies = {
+            "wwrtx.vst": "nkpa9GMRJb6IXY6QocvU2OCjBFr7PI5sz3zuvHK0pZ8s7wbAiDq-N1cnID5Yk0_Mf"
+                         "NV0tDDf1WKce2HpKYXvNrRCq-QjITOhvc51vTnUEqtKOXiMHg72N2iVw3daxMQuaauueGic_L"
+                         "W-pSDyJok7UBVoV-AVXSxEqpsdQY4PCpVP420niA3-ch8a-kuWrTcHK4EHelLXzqBOVbifiS2Lc8"
+                         "QxRGEp0KGK5G1DkplM7-OnQgXKnLAYUWEDHB18C9yQKorJ5Hr1iT8FTQ_-Dr4hmg",
+            "wwrtx.d2st": "a529674",
+            "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0ob3iKrITG1_B-kEmKk-t_jXqIXEDcOM0WOGfH03WdFKb",
+            "wwrtx.ltype": "1",
+            "wxpay.corpid": "1688852500754167",
+            "wxpay.vid": "1688852500754167",
+        }
 
-    def get_visible_element(self, locator, eqc=20) -> WebElement:
+        for k, v in cookies.items():
+            self.driver.add_cookie({"name": k, "value": v})
+        self.driver.refresh()
+
+    def get_visible_element(self, locator, timeout=10, eqc=20) -> WebElement:
         '''
         定位元素，参数locator为元祖类型
         :param locator:
@@ -28,7 +44,7 @@ class BasePage:
         :return:
         '''
         try:
-            ele = WebDriverWait(self.driver, eqc).until(
+            ele = WebDriverWait(self.driver, timeout, eqc).until(
                 EC.visibility_of_element_located(locator))
             logger.info("获取{}元素成功".format(locator))
             return ele
@@ -36,7 +52,7 @@ class BasePage:
             logger.error("相对时间内没有定位到{}元素".format(locator))
             # self.driver.save_screenshot("/logs{}.png".format(time.time)
 
-    def get_presence_element(self, locator, eqc=20):
+    def get_presence_element(self, locator, timeout=10, eqc=20):
         """
         定位一组元素
         :param locator:
@@ -44,7 +60,7 @@ class BasePage:
         :return:
         """
         try:
-            elements = WebDriverWait(self.driver, eqc).until(
+            elements = WebDriverWait(self.driver,timeout, eqc).until(
                 EC.presence_of_element_located(locator))
             logger.info('Positioning to the %s elements.' % locator)
             return elements
