@@ -21,12 +21,12 @@ class BasePage:
         self.driver = Chrome()
         self.driver.get("https://work.weixin.qq.com/wework_admin/frame#contacts")
         cookies = {
-            "wwrtx.vst": "nkpa9GMRJb6IXY6QocvU2OCjBFr7PI5sz3zuvHK0pZ8s7wbAiDq-N1cnID5Yk0_Mf"
-                         "NV0tDDf1WKce2HpKYXvNrRCq-QjITOhvc51vTnUEqtKOXiMHg72N2iVw3daxMQuaauueGic_L"
-                         "W-pSDyJok7UBVoV-AVXSxEqpsdQY4PCpVP420niA3-ch8a-kuWrTcHK4EHelLXzqBOVbifiS2Lc8"
-                         "QxRGEp0KGK5G1DkplM7-OnQgXKnLAYUWEDHB18C9yQKorJ5Hr1iT8FTQ_-Dr4hmg",
-            "wwrtx.d2st": "a529674",
-            "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0ob3iKrITG1_B-kEmKk-t_jXqIXEDcOM0WOGfH03WdFKb",
+            "wwrtx.vst": "-A3xktIGna7ISy2sZZINEowURqmarRytaDVYPQklWLBARCgqPNKeFf7xyO7-MR4dKijvPwS4aqiym"
+                         "Zk1E4glme7zfhoCcC2YqvwZlePh4GxerFWTBi1w-oO4tVNhbY_aGIKCB4-nl5Qe46gmJ_PFN7WIrAT"
+                         "bu4aoYzkib_I4u0H-FfFk_o8Kb3furSjNjDa8MrKfi92E1sHd_MW--TvFzP5VCoP2WM3gEYf71VnvI0W"
+                         "-IKvZyGvYz8wMWy87vgWDb4rGhNm1jxnVnrAOHqcprQ",
+            "wwrtx.d2st": "a6325005",
+            "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0oX9R7IkRuBZFMPCs-Kwt1Vtco94_ytHuJfV5AGyhTjWn",
             "wwrtx.ltype": "1",
             "wxpay.corpid": "1688852500754167",
             "wxpay.vid": "1688852500754167",
@@ -44,7 +44,7 @@ class BasePage:
         :return:
         '''
         try:
-            ele = WebDriverWait(self.driver, timeout, eqc).until(
+            ele = WebDriverWait(self.driver, timeout=timeout, poll_frequency=eqc).until(
                 EC.visibility_of_element_located(locator))
             logger.info("获取{}元素成功".format(locator))
             return ele
@@ -60,12 +60,22 @@ class BasePage:
         :return:
         """
         try:
-            elements = WebDriverWait(self.driver,timeout, eqc).until(
+            elements = WebDriverWait(self.driver, timeout=timeout, poll_frequency=eqc).until(
                 EC.presence_of_element_located(locator))
             logger.info('Positioning to the %s elements.' % locator)
             return elements
         except:
             logger.error("相对时间内没有定位到{}元素".format(locator))
+
+    def get_clickable_element(self, locator, timeout=10, eqc=20):
+        try:
+            elements = WebDriverWait(self.driver, timeout=timeout, poll_frequency=eqc).until(
+                EC.element_to_be_clickable(locator))
+            logger.info('Positioning to the %s elements.' % locator)
+            return elements
+        except:
+            logger.error("相对时间内没有定位到{}元素".format(locator))
+
 
     def send_keys(self, locator, text):
         '''
@@ -291,10 +301,6 @@ class BasePage:
         logger.info('Roll to the end!')
 
     def get_windows_img(self):
-        '''
-        在这里我们把file_path这个参数写死，直接保存到我们项目根目录的一个文件夹里，.\Screenshots下
-        '''
-
         try:
             self.driver.get_screenshot_as_file(contants.screenshot_img)
             logger.info('Had take screenshot and save to folder:/screenshots')

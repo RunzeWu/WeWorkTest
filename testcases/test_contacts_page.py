@@ -7,8 +7,6 @@ import logging
 import time
 import pytest, allure
 from faker import Faker
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from common.mylog import get_logger
 from pages.contacts_page import ContactsPage
 
@@ -25,16 +23,15 @@ class TestWework():
         self.fakename = self.f.name()
         self.fake_id = self.f.ssn()
         self.fake_mobile = self.f.phone_number()
-        # 1
-        # with allure.step("点击通讯录"):
-        #     contact_page.click_contacts()
-        time.sleep(3)
+
+        time.sleep(5)
         # 2
         with allure.step("点击添加按钮"):
             contact_page.click_add_btn()
         logging.info("{}操作成功".format(ContactsPage._add_member_btn_locator))
         # 3
         with allure.step("输入用户名"):
+            time.sleep(5)
             contact_page.input_info(self.fakename,self.fake_id,self.fake_mobile)
         logging.info("{}操作成功".format(ContactsPage._memberAdd_phone_locator))
         # 6
@@ -50,3 +47,7 @@ class TestWework():
                 logging.error("添加成员用例测试失败")
                 contact_page.get_windows_img()
                 raise e
+
+
+if __name__ == '__main__':
+    pytest.main()
