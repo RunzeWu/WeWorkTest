@@ -19,25 +19,28 @@ logger = mylog.get_logger("basepage")
 
 class BasePage:
 
-    def __init__(self):
-        self.driver = Chrome()
-        self.driver.maximize_window()
-        self.driver.get("https://work.weixin.qq.com/wework_admin/frame#contacts")
-        cookies = {
-            "wwrtx.vst": "JOsB5yJshvXLXV0JeTRtwkwOLXmqunijIWONYx6akoNRbL6NahE-9ZnhlbdaZf"
-                         "Wg-B2UjloYJ1Ta-ah9yI2P1TyI-uqCY7xU84EJdLQ3_VCP_IYqe5-XC7gKVgfe1iL"
-                         "VvmO8aMVxtOHAvQ-eZKPo02WsAK9mjheS81TNDLcgk64k_eXegszuUcUKni2OaZxowfWmm"
-                         "wLe86qO4fOIAkG5rZkrSG_pAo44VvBQ7I7QkGR0tFwIx5oJBRcsvmYfM_SCcG1NWQ3YvTDXqkDmr2ciZg",
-            "wwrtx.d2st": "a8079378",
-            "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0oZqGGivr3T5B83X07aoHHnOXNKGNV7KS5ZjFeFVM-3gv",
-            "wwrtx.ltype": "1",
-            "wxpay.corpid": "1688852500754167",
-            "wxpay.vid": "1688852500754167",
-        }
+    def __init__(self, driver=None):
+        if driver is None:
+            self.driver = Chrome()
+            self.driver.maximize_window()
+            self.driver.get("https://work.weixin.qq.com/wework_admin/frame#contacts")
+            cookies = {
+                "wwrtx.vst": "zenYAe4CxGbueq5ASVGKquiAk5PdPagPGzKHdLCVqT2i-M2L68XlyLV_-2tP7InD4kOpcBm"
+                             "_stcX8b9Y9z6ec1BgEMdhR-FASZD-wSBX7D37_L7OFcsEYXUePdKC8sPqQBza3KieYk7TE9De"
+                             "2a2AaILp3vEZTlaJMLwFDrOFjOBcFLvhY-k-VmX1gl-BGUklaeVgd8MBeY1ky3t4-2M0yiQlnA"
+                             "7VWwRByLyJxlGrHgCrxZhOhs_BhvyJzLmJOoFNQvhrVSvzAXXoFdHs51gdxA",
+                "wwrtx.d2st": "a4861364",
+                "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0oXsd6Y-SXiveFjergOybpzZeb_7vPhAIpt8yVlOv0Ki1",
+                "wwrtx.ltype": "1",
+                "wxpay.corpid": "1688852500754167",
+                "wxpay.vid": "1688852500754167",
+            }
 
-        for k, v in cookies.items():
-            self.driver.add_cookie({"name": k, "value": v})
-        self.driver.refresh()
+            for k, v in cookies.items():
+                self.driver.add_cookie({"name": k, "value": v})
+            self.driver.refresh()
+        else:
+            self.driver = driver
 
     def get_visible_element(self, locator, eqc=20) -> WebElement:
         '''
@@ -49,6 +52,7 @@ class BasePage:
         try:
             ele = WebDriverWait(self.driver, timeout=eqc).until(
                 EC.visibility_of_element_located(locator))
+            logger.info('获取{}元素成功'.format(locator))
             return ele
         except:
             logger.error("相对时间内没有定位到{}元素".format(locator))
@@ -64,6 +68,7 @@ class BasePage:
         try:
             ele = WebDriverWait(self.driver, timeout=eqc).until(
                 EC.presence_of_element_located(locator))
+            logger.info('获取{}元素成功'.format(locator))
             return ele
         except:
             logger.error("相对时间内没有定位到{}元素".format(locator))
@@ -73,12 +78,11 @@ class BasePage:
         try:
             ele = WebDriverWait(self.driver, timeout=eqc).until(
             EC.element_to_be_clickable(locator))
+            logger.info('获取{}元素成功'.format(locator))
             return ele
         except:
             logger.error("相对时间内没有定位到{}元素".format(locator))
             allure.attach(self.get_windows_img())
-
-
 
     def send_keys(self, locator, text):
         '''
@@ -259,8 +263,11 @@ class BasePage:
         '''
 
         element = self.get_visible_element(locator)
-        logger.info('get text in %s' % locator)
-        return element.text()
+        # logger.info('get text in %s' % locator)
+        text = element.text
+
+        WebDriverWait(self.driver,10).until(EC.invisibility_of_element(locator))
+        return text
 
     def get_attribute(self, locator, name):
         '''

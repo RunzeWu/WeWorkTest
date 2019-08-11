@@ -5,23 +5,18 @@
 '''
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
-from common.mylog import get_logger
-
-logger = get_logger(__name__)
-
 
 class SearchResultPage(BasePage):
     _search_input_loc = (By.ID, "memberSearchInput")
     _edit_loc = (By.XPATH, "//a[@class='qui_btn ww_btn js_edit']")
     # 禁用启用是一个
     _disable_loc = (By.XPATH, "//a[@class='qui_btn ww_btn js_disable']")
-    _save_loc = (By.XPATH, "qui_btn ww_btn ww_btn_Blue js_save")
-    _confirm_btn_loc = (By.XPATH, "qui_btn ww_btn ww_btn_Blue")
+    _save_loc = (By.XPATH, "//div[@class='member_edit_formWrap ']//preceding-sibling::div[1]//a[@class='qui_btn ww_btn ww_btn_Blue js_save']")
+    _confirm_btn_loc = (By.XPATH, "//a[@class='qui_btn ww_btn ww_btn_Blue']")
     _tips_loc = (By.ID, "js_tips")
 
     def search_member(self, name):
-        search_input = self.get_visible_element(self._search_input_loc)
-        search_input.send_keys(name)
+        self.send_keys(self._search_input_loc,name)
 
     def click_edit(self):
         ele = self.get_visible_element(self._edit_loc)

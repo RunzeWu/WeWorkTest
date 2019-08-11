@@ -26,3 +26,7 @@ screenshot_img = os.path.join(output_dir, "screenshots", str(int(time.time()))+"
 # case 路径
 case_dir = os.path.join(base_dir, "testcase")
 
+# 图片路径
+img = os.path.join(base_dir, "images", "timg.jpeg")
+print(img)
+
