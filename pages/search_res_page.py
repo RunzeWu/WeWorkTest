@@ -4,6 +4,9 @@
  @Author:       吴润泽 
 '''
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 from pages.base_page import BasePage
 
 class SearchResultPage(BasePage):
@@ -35,4 +38,6 @@ class SearchResultPage(BasePage):
         ele.click()
 
     def get_toast(self):
-        return self.get_text(self._tips_loc)
+        text = self.get_text(self._tips_loc)
+        WebDriverWait(self.driver,10).until(EC.invisibility_of_element(self._tips_loc))
+        return text

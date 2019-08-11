@@ -265,8 +265,6 @@ class BasePage:
         element = self.get_visible_element(locator)
         # logger.info('get text in %s' % locator)
         text = element.text
-
-        WebDriverWait(self.driver,10).until(EC.invisibility_of_element(locator))
         return text
 
     def get_attribute(self, locator, name):

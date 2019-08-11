@@ -40,7 +40,7 @@ class TestWeworkAddMember():
                 logger.info("添加成员用例测试成功")
             except AssertionError as e:
                 logger.error("添加成员用例测试失败")
-                contact_page.get_windows_img()
+                allure.attach(contact_page.get_windows_img())
                 raise e
 
 
