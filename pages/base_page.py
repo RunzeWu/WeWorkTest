@@ -3,6 +3,8 @@
  @Time:         2019-08-04
  @Author:       吴润泽 
 '''
+import time
+import allure
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Chrome, ActionChains
 from selenium.webdriver.remote.webelement import WebElement
@@ -19,14 +21,15 @@ class BasePage:
 
     def __init__(self):
         self.driver = Chrome()
+        self.driver.maximize_window()
         self.driver.get("https://work.weixin.qq.com/wework_admin/frame#contacts")
         cookies = {
-            "wwrtx.vst": "-A3xktIGna7ISy2sZZINEowURqmarRytaDVYPQklWLBARCgqPNKeFf7xyO7-MR4dKijvPwS4aqiym"
-                         "Zk1E4glme7zfhoCcC2YqvwZlePh4GxerFWTBi1w-oO4tVNhbY_aGIKCB4-nl5Qe46gmJ_PFN7WIrAT"
-                         "bu4aoYzkib_I4u0H-FfFk_o8Kb3furSjNjDa8MrKfi92E1sHd_MW--TvFzP5VCoP2WM3gEYf71VnvI0W"
-                         "-IKvZyGvYz8wMWy87vgWDb4rGhNm1jxnVnrAOHqcprQ",
-            "wwrtx.d2st": "a6325005",
-            "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0oX9R7IkRuBZFMPCs-Kwt1Vtco94_ytHuJfV5AGyhTjWn",
+            "wwrtx.vst": "JOsB5yJshvXLXV0JeTRtwkwOLXmqunijIWONYx6akoNRbL6NahE-9ZnhlbdaZf"
+                         "Wg-B2UjloYJ1Ta-ah9yI2P1TyI-uqCY7xU84EJdLQ3_VCP_IYqe5-XC7gKVgfe1iL"
+                         "VvmO8aMVxtOHAvQ-eZKPo02WsAK9mjheS81TNDLcgk64k_eXegszuUcUKni2OaZxowfWmm"
+                         "wLe86qO4fOIAkG5rZkrSG_pAo44VvBQ7I7QkGR0tFwIx5oJBRcsvmYfM_SCcG1NWQ3YvTDXqkDmr2ciZg",
+            "wwrtx.d2st": "a8079378",
+            "wwrtx.sid": "iAu-Z4L3xTLbZ5elezl0oZqGGivr3T5B83X07aoHHnOXNKGNV7KS5ZjFeFVM-3gv",
             "wwrtx.ltype": "1",
             "wxpay.corpid": "1688852500754167",
             "wxpay.vid": "1688852500754167",
@@ -36,7 +39,7 @@ class BasePage:
             self.driver.add_cookie({"name": k, "value": v})
         self.driver.refresh()
 
-    def get_visible_element(self, locator, timeout=10, eqc=20) -> WebElement:
+    def get_visible_element(self, locator, eqc=20) -> WebElement:
         '''
         定位元素，参数locator为元祖类型
         :param locator:
@@ -44,15 +47,14 @@ class BasePage:
         :return:
         '''
         try:
-            ele = WebDriverWait(self.driver, timeout=timeout, poll_frequency=eqc).until(
+            ele = WebDriverWait(self.driver, timeout=eqc).until(
                 EC.visibility_of_element_located(locator))
-            logger.info("获取{}元素成功".format(locator))
             return ele
         except:
             logger.error("相对时间内没有定位到{}元素".format(locator))
-            # self.driver.save_screenshot("/logs{}.png".format(time.time)
+            allure.attach(self.get_windows_img())
 
-    def get_presence_element(self, locator, timeout=10, eqc=20):
+    def get_presence_element(self, locator, eqc=10):
         """
         定位一组元素
         :param locator:
@@ -60,21 +62,22 @@ class BasePage:
         :return:
         """
         try:
-            elements = WebDriverWait(self.driver, timeout=timeout, poll_frequency=eqc).until(
+            ele = WebDriverWait(self.driver, timeout=eqc).until(
                 EC.presence_of_element_located(locator))
-            logger.info('Positioning to the %s elements.' % locator)
-            return elements
+            return ele
         except:
             logger.error("相对时间内没有定位到{}元素".format(locator))
+            allure.attach(self.get_windows_img())
 
-    def get_clickable_element(self, locator, timeout=10, eqc=20):
+    def get_clickable_element(self, locator, eqc=20):
         try:
-            elements = WebDriverWait(self.driver, timeout=timeout, poll_frequency=eqc).until(
-                EC.element_to_be_clickable(locator))
-            logger.info('Positioning to the %s elements.' % locator)
-            return elements
+            ele = WebDriverWait(self.driver, timeout=eqc).until(
+            EC.element_to_be_clickable(locator))
+            return ele
         except:
             logger.error("相对时间内没有定位到{}元素".format(locator))
+            allure.attach(self.get_windows_img())
+
 
 
     def send_keys(self, locator, text):
@@ -101,6 +104,7 @@ class BasePage:
             ).until(EC.text_to_be_present_in_element(locator, text))
         except TimeoutException:
             logger.info('No location to the element.')
+            allure.attach(self.get_windows_img())
             return False
         else:
             return result
@@ -117,6 +121,7 @@ class BasePage:
             ).until(EC.text_to_be_present_in_element_value(locator, value))
         except TimeoutException:
             logger.info('No location to the element.')
+            allure.attach(self.get_windows_img())
             return False
         else:
             return result
@@ -271,8 +276,12 @@ class BasePage:
         执行js
         '''
 
-        logger.info('Execute js.%s' % js)
-        return self.driver.execute_script(js)
+        try:
+            logger.info('Execute js.%s' % js)
+            return self.driver.execute_script(js)
+        except:
+            allure.attach(self.get_windows_img())
+            logger.info('failed to excute js')
 
     def js_focus_element(self, locator):
         '''
@@ -302,11 +311,13 @@ class BasePage:
 
     def get_windows_img(self):
         try:
-            self.driver.get_screenshot_as_file(contants.screenshot_img)
-            logger.info('Had take screenshot and save to folder:/screenshots')
+            file_name = contants.screenshot_img
+            self.driver.get_screenshot_as_file(file_name)
+            logger.info('Had take screenshot and save to folder:output/screenshots')
         except NameError as e:
             logger.info('Failed to take the screenshot!%s' % e)
             self.get_windows_img()
+        return file_name
 
     def switch_window(self, name=None, fqc=20):
         """

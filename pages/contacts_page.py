@@ -24,7 +24,7 @@ class ContactsPage(BasePage):
 
     def click_add_btn(self):
         ele = self.get_visible_element(self._add_member_btn_locator)
-        return ele.click()
+        ele.click()
 
     def input_info(self, username, userid, mobile):
         user_input = self.get_visible_element(self._user_input_locator)

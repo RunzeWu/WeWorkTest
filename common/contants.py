@@ -21,9 +21,8 @@ log_time = time.strftime('%Y-%m-%d')
 logs_log = os.path.join(output_dir, log_time + ".log")
 
 # 截图路径
-screenshot_img = os.path.join(output_dir, "images", str(int(time.time()))+".img")
+screenshot_img = os.path.join(output_dir, "screenshots", str(int(time.time()))+".png")
 
 # case 路径
 case_dir = os.path.join(base_dir, "testcase")
 
-print(screenshot_img)

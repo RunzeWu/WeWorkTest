@@ -4,7 +4,6 @@
  @Author:       吴润泽 
 '''
 import logging
-import time
 import pytest, allure
 from faker import Faker
 from common.mylog import get_logger
@@ -15,7 +14,7 @@ contact_page = ContactsPage()
 
 
 @allure.feature("企业微信测试")
-class TestWework():
+class TestWeworkAddMember():
 
     @allure.story("测试添加成员")
     def test_add_member(self):
@@ -23,15 +22,12 @@ class TestWework():
         self.fakename = self.f.name()
         self.fake_id = self.f.ssn()
         self.fake_mobile = self.f.phone_number()
-
-        time.sleep(5)
         # 2
         with allure.step("点击添加按钮"):
             contact_page.click_add_btn()
         logging.info("{}操作成功".format(ContactsPage._add_member_btn_locator))
         # 3
         with allure.step("输入用户名"):
-            time.sleep(5)
             contact_page.input_info(self.fakename,self.fake_id,self.fake_mobile)
         logging.info("{}操作成功".format(ContactsPage._memberAdd_phone_locator))
         # 6
